@@ -1,0 +1,5 @@
+# Fase 0: base mínima. Torch se instala aparte con el índice CUDA (ver docs/fase0.md).
+numpy
+pyyaml
+requests
+psutil

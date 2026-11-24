@@ -30,7 +30,7 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 
 ## Fases
 
-- [ ] 0. Base y hardware
+- [x] 0. Base y hardware
 - [ ] 1. Cerebro (LLM)
 - [ ] 2. Laboratorio de voces (TTS)
 - [ ] 3. Oído (STT)
@@ -42,4 +42,4 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 
 ## Estado
 
-Fase 0 en curso.
+Fase 0 completada. Siguiente: Fase 1 (cerebro LLM).
