@@ -15,3 +15,7 @@ chroma_db/
 *.db
 .idea/
 .vscode/
+voicelab/samples/
+voicelab/envs/
+voicelab/refs/
+voicelab/packs/

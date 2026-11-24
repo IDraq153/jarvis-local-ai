@@ -1,0 +1,6 @@
+# Fase 2: voces ligeras que corren en el venv principal (Piper y Kokoro).
+# XTTS y el tuner de Kokoro tienen su propio venv: ver voicelab/requirements-*.txt y docs/fase2.md
+piper-tts
+kokoro==0.9.4
+soundfile
+sounddevice

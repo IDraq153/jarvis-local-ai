@@ -1,0 +1,354 @@
+{
+  "piper-es_MX-claude-high": {
+    "label": "Piper es_MX claude (high)",
+    "backend": "piper",
+    "date": "2026-11-24T10:23:26",
+    "vram_baseline_mb": 7072,
+    "phrases": [
+      {
+        "text": "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?",
+        "first_audio_s": 0.056,
+        "synth_s": 0.112,
+        "audio_s": 3.24,
+        "rtf": 0.035,
+        "wav": "piper-es_MX-claude-high/1.wav"
+      },
+      {
+        "text": "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima.",
+        "first_audio_s": 0.284,
+        "synth_s": 0.284,
+        "audio_s": 7.31,
+        "rtf": 0.039,
+        "wav": "piper-es_MX-claude-high/2.wav"
+      },
+      {
+        "text": "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas.",
+        "first_audio_s": 0.248,
+        "synth_s": 0.625,
+        "audio_s": 18.3,
+        "rtf": 0.034,
+        "wav": "piper-es_MX-claude-high/3.wav"
+      },
+      {
+        "text": "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45.",
+        "first_audio_s": 0.252,
+        "synth_s": 0.465,
+        "audio_s": 12.47,
+        "rtf": 0.037,
+        "wav": "piper-es_MX-claude-high/4.wav"
+      }
+    ],
+    "load_s": 1.16,
+    "vram_after_load_mb": 7068,
+    "vram_peak_mb": 7072,
+    "vram_delta_mb": 0
+  },
+  "piper-es_MX-ald-medium": {
+    "label": "Piper es_MX ald (medium)",
+    "backend": "piper",
+    "date": "2026-11-24T10:23:32",
+    "vram_baseline_mb": 7053,
+    "phrases": [
+      {
+        "text": "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?",
+        "first_audio_s": 0.06,
+        "synth_s": 0.133,
+        "audio_s": 3.81,
+        "rtf": 0.035,
+        "wav": "piper-es_MX-ald-medium/1.wav"
+      },
+      {
+        "text": "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima.",
+        "first_audio_s": 0.268,
+        "synth_s": 0.268,
+        "audio_s": 8.0,
+        "rtf": 0.033,
+        "wav": "piper-es_MX-ald-medium/2.wav"
+      },
+      {
+        "text": "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas.",
+        "first_audio_s": 0.242,
+        "synth_s": 0.579,
+        "audio_s": 17.31,
+        "rtf": 0.033,
+        "wav": "piper-es_MX-ald-medium/3.wav"
+      },
+      {
+        "text": "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45.",
+        "first_audio_s": 0.237,
+        "synth_s": 0.446,
+        "audio_s": 13.26,
+        "rtf": 0.034,
+        "wav": "piper-es_MX-ald-medium/4.wav"
+      }
+    ],
+    "load_s": 0.56,
+    "vram_after_load_mb": 7053,
+    "vram_peak_mb": 7053,
+    "vram_delta_mb": 0
+  },
+  "kokoro-ef_dora": {
+    "label": "Kokoro ef_dora (mujer, GPU)",
+    "backend": "kokoro",
+    "date": "2026-11-24T10:28:00",
+    "vram_baseline_mb": 1571,
+    "phrases": [
+      {
+        "text": "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?",
+        "first_audio_s": 0.176,
+        "synth_s": 0.176,
+        "audio_s": 2.77,
+        "rtf": 0.063,
+        "wav": "kokoro-ef_dora/1.wav"
+      },
+      {
+        "text": "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima.",
+        "first_audio_s": 0.242,
+        "synth_s": 0.243,
+        "audio_s": 7.0,
+        "rtf": 0.035,
+        "wav": "kokoro-ef_dora/2.wav"
+      },
+      {
+        "text": "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas.",
+        "first_audio_s": 0.437,
+        "synth_s": 0.437,
+        "audio_s": 15.78,
+        "rtf": 0.028,
+        "wav": "kokoro-ef_dora/3.wav"
+      },
+      {
+        "text": "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45.",
+        "first_audio_s": 0.336,
+        "synth_s": 0.336,
+        "audio_s": 12.32,
+        "rtf": 0.027,
+        "wav": "kokoro-ef_dora/4.wav"
+      }
+    ],
+    "load_s": 24.04,
+    "vram_after_load_mb": 2022,
+    "vram_peak_mb": 2876,
+    "vram_delta_mb": 1305
+  },
+  "kokoro-em_alex": {
+    "label": "Kokoro em_alex (hombre, GPU)",
+    "backend": "kokoro",
+    "date": "2026-11-24T10:28:50",
+    "vram_baseline_mb": 1734,
+    "phrases": [
+      {
+        "text": "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?",
+        "first_audio_s": 0.214,
+        "synth_s": 0.214,
+        "audio_s": 2.95,
+        "rtf": 0.073,
+        "wav": "kokoro-em_alex/1.wav"
+      },
+      {
+        "text": "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima.",
+        "first_audio_s": 0.319,
+        "synth_s": 0.319,
+        "audio_s": 7.03,
+        "rtf": 0.045,
+        "wav": "kokoro-em_alex/2.wav"
+      },
+      {
+        "text": "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas.",
+        "first_audio_s": 0.41,
+        "synth_s": 0.41,
+        "audio_s": 15.53,
+        "rtf": 0.026,
+        "wav": "kokoro-em_alex/3.wav"
+      },
+      {
+        "text": "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45.",
+        "first_audio_s": 0.335,
+        "synth_s": 0.335,
+        "audio_s": 12.53,
+        "rtf": 0.027,
+        "wav": "kokoro-em_alex/4.wav"
+      }
+    ],
+    "load_s": 1.73,
+    "vram_after_load_mb": 2052,
+    "vram_peak_mb": 2950,
+    "vram_delta_mb": 1216
+  },
+  "kokoro-em_santa": {
+    "label": "Kokoro em_santa (hombre, GPU)",
+    "backend": "kokoro",
+    "date": "2026-11-24T10:28:56",
+    "vram_baseline_mb": 1734,
+    "phrases": [
+      {
+        "text": "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?",
+        "first_audio_s": 0.164,
+        "synth_s": 0.164,
+        "audio_s": 2.98,
+        "rtf": 0.055,
+        "wav": "kokoro-em_santa/1.wav"
+      },
+      {
+        "text": "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima.",
+        "first_audio_s": 0.221,
+        "synth_s": 0.221,
+        "audio_s": 7.05,
+        "rtf": 0.031,
+        "wav": "kokoro-em_santa/2.wav"
+      },
+      {
+        "text": "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas.",
+        "first_audio_s": 0.347,
+        "synth_s": 0.347,
+        "audio_s": 15.62,
+        "rtf": 0.022,
+        "wav": "kokoro-em_santa/3.wav"
+      },
+      {
+        "text": "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45.",
+        "first_audio_s": 0.297,
+        "synth_s": 0.297,
+        "audio_s": 12.65,
+        "rtf": 0.024,
+        "wav": "kokoro-em_santa/4.wav"
+      }
+    ],
+    "load_s": 1.82,
+    "vram_after_load_mb": 2052,
+    "vram_peak_mb": 2948,
+    "vram_delta_mb": 1214
+  },
+  "kokoro-ef_dora-cpu": {
+    "label": "Kokoro ef_dora (mujer, CPU)",
+    "backend": "kokoro",
+    "date": "2026-11-24T10:29:02",
+    "vram_baseline_mb": 1734,
+    "phrases": [
+      {
+        "text": "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?",
+        "first_audio_s": 1.009,
+        "synth_s": 1.009,
+        "audio_s": 2.77,
+        "rtf": 0.364,
+        "wav": "kokoro-ef_dora-cpu/1.wav"
+      },
+      {
+        "text": "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima.",
+        "first_audio_s": 2.512,
+        "synth_s": 2.512,
+        "audio_s": 7.0,
+        "rtf": 0.359,
+        "wav": "kokoro-ef_dora-cpu/2.wav"
+      },
+      {
+        "text": "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas.",
+        "first_audio_s": 5.627,
+        "synth_s": 5.627,
+        "audio_s": 15.78,
+        "rtf": 0.357,
+        "wav": "kokoro-ef_dora-cpu/3.wav"
+      },
+      {
+        "text": "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45.",
+        "first_audio_s": 4.525,
+        "synth_s": 4.525,
+        "audio_s": 12.32,
+        "rtf": 0.367,
+        "wav": "kokoro-ef_dora-cpu/4.wav"
+      }
+    ],
+    "load_s": 1.5,
+    "vram_after_load_mb": 1734,
+    "vram_peak_mb": 1734,
+    "vram_delta_mb": 0
+  },
+  "xtts-voz1": {
+    "label": "XTTS · voz1",
+    "backend": "xtts",
+    "date": "2026-11-24T11:10:45",
+    "vram_baseline_mb": 1704,
+    "phrases": [
+      {
+        "text": "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?",
+        "first_audio_s": 0.636,
+        "synth_s": 2.69,
+        "audio_s": 3.84,
+        "rtf": 0.701,
+        "wav": "xtts-voz1/1.wav"
+      },
+      {
+        "text": "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima.",
+        "first_audio_s": 0.631,
+        "synth_s": 5.665,
+        "audio_s": 7.98,
+        "rtf": 0.71,
+        "wav": "xtts-voz1/2.wav"
+      },
+      {
+        "text": "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas.",
+        "first_audio_s": 0.643,
+        "synth_s": 14.359,
+        "audio_s": 19.43,
+        "rtf": 0.739,
+        "wav": "xtts-voz1/3.wav"
+      },
+      {
+        "text": "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45.",
+        "first_audio_s": 0.647,
+        "synth_s": 10.539,
+        "audio_s": 14.1,
+        "rtf": 0.747,
+        "wav": "xtts-voz1/4.wav"
+      }
+    ],
+    "load_s": 26.76,
+    "vram_after_load_mb": 3891,
+    "vram_peak_mb": 4309,
+    "vram_delta_mb": 2605
+  },
+  "kokoro-am_voz1": {
+    "label": "Kokoro pack · am_voz1",
+    "backend": "kokoro",
+    "date": "2026-11-24T11:24:02",
+    "vram_baseline_mb": 1558,
+    "phrases": [
+      {
+        "text": "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?",
+        "first_audio_s": 0.17,
+        "synth_s": 0.17,
+        "audio_s": 3.9,
+        "rtf": 0.043,
+        "wav": "kokoro-am_voz1/1.wav"
+      },
+      {
+        "text": "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima.",
+        "first_audio_s": 0.272,
+        "synth_s": 0.272,
+        "audio_s": 8.82,
+        "rtf": 0.031,
+        "wav": "kokoro-am_voz1/2.wav"
+      },
+      {
+        "text": "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas.",
+        "first_audio_s": 0.401,
+        "synth_s": 0.401,
+        "audio_s": 18.62,
+        "rtf": 0.022,
+        "wav": "kokoro-am_voz1/3.wav"
+      },
+      {
+        "text": "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45.",
+        "first_audio_s": 0.313,
+        "synth_s": 0.313,
+        "audio_s": 14.93,
+        "rtf": 0.021,
+        "wav": "kokoro-am_voz1/4.wav"
+      }
+    ],
+    "load_s": 8.74,
+    "vram_after_load_mb": 2014,
+    "vram_peak_mb": 2854,
+    "vram_delta_mb": 1296
+  }
+}

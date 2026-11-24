@@ -1,0 +1,43 @@
+# Catálogo del laboratorio de voces. Cada voz se pasa tal cual a tts.load_backend(),
+# salvo `id` y `label`. Las frases son las mismas para todos los motores.
+phrases:
+  - "Hola, soy JARVIS. ¿En qué puedo ayudarte hoy?"
+  - "Hoy tienes clase de Estructuras de Datos a las diez y media, y después un laboratorio de redes en la Universidad de Lima."
+  - "La ciberseguridad se basa en proteger la confidencialidad, la integridad y la disponibilidad de la información. Por eso conviene entender cómo funcionan las redes antes de intentar defenderlas. Primero aprendes los protocolos, después los ataques, y al final las defensas."
+  - "El servidor 192.168.1.10 respondió en 35 milisegundos. La reunión con Cisco es el 24 de noviembre de 2026 a las 15:45."
+
+voices:
+  - id: piper-es_MX-claude-high
+    label: Piper es_MX claude (high)
+    backend: piper
+    model: voicelab/models/piper/es_MX-claude-high.onnx
+  - id: piper-es_MX-ald-medium
+    label: Piper es_MX ald (medium)
+    backend: piper
+    model: voicelab/models/piper/es_MX-ald-medium.onnx
+  - id: kokoro-ef_dora
+    label: Kokoro ef_dora (mujer, GPU)
+    backend: kokoro
+    voice: ef_dora
+    device: cuda
+  - id: kokoro-em_alex
+    label: Kokoro em_alex (hombre, GPU)
+    backend: kokoro
+    voice: em_alex
+    device: cuda
+  - id: kokoro-em_santa
+    label: Kokoro em_santa (hombre, GPU)
+    backend: kokoro
+    voice: em_santa
+    device: cuda
+  - id: kokoro-ef_dora-cpu
+    label: Kokoro ef_dora (mujer, CPU)
+    backend: kokoro
+    voice: ef_dora
+    device: cpu
+
+# Una voz clonada por cada audio de voicelab/refs/ (WAV recomendado, 10-30 s, una sola persona).
+clones:
+  - backend: xtts
+    language: es
+    device: cuda

@@ -15,5 +15,9 @@ stt:
   backend: faster-whisper
   model: null
 tts:
-  backend: piper
-  voice: null
+  backend: kokoro
+  voice: voicelab/packs/am_voz1.pt   # pack de voz clonada con inno-kokoro (Fase 2)
+  lang_code: e                       # español
+  device: cuda
+  trim_cache: true                   # libera caché de CUDA tras cada trozo (menos VRAM)
+  speed: 1.1                         # elegido en voicelab.tune

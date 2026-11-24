@@ -1,0 +1,9 @@
+# venv: voicelab/envs/xtts (Python 3.12). Instalar en este orden:
+#   py -3.12 -m venv voicelab\envs\xtts
+#   voicelab\envs\xtts\Scripts\python.exe -m pip install torch==2.8.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+#   voicelab\envs\xtts\Scripts\python.exe -m pip install -r voicelab\requirements-xtts.txt
+#   voicelab\envs\xtts\Scripts\python.exe voicelab\workers\xtts_worker.py --download   (acepta la licencia CPML tú mismo)
+# torch 2.8.0 evita necesitar torchcodec (solo hace falta con torch 2.9+); transformers 5.x rompe XTTS.
+coqui-tts==0.28.0
+transformers>=4.57,<5
+six

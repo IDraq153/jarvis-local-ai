@@ -1,0 +1,5 @@
+# venv: voicelab/envs/kclone (Python 3.12). Solo crea packs de voz (.pt) para Kokoro:
+#   py -3.12 -m venv voicelab\envs\kclone
+#   voicelab\envs\kclone\Scripts\python.exe -m pip install -r voicelab\requirements-kclone.txt
+#   voicelab\envs\kclone\Scripts\inno-kokoro.exe voicelab\refs\voz1.wav am_voz1 voicelab\packs --backend torch
+inno-kokoro[torch]==0.4.0
