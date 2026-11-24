@@ -13,7 +13,17 @@ llm:
     - qwen3:8b
 stt:
   backend: faster-whisper
-  model: null
+  model: small          # tiny/base/small; small en CPU conserva la calidad y no usa VRAM (docs/fase3.md)
+  device: cpu           # la GPU solo tiene ~535 MB libres con LLM + voz cargados
+  compute_type: int8
+  language: es          # null = detectar idioma
+  beam_size: 1          # decodificación voraz: mucho más rápida, casi igual de precisa
+  initial_prompt: "Jarvis, Ollama, Qwen, CCNA, GitHub, VRAM, ciberseguridad, Lima"  # vocabulario: baja el WER (docs/fase3.md)
+  vad_filter: true      # faster-whisper descarta silencios internos
+  cpu_threads: 0        # 0 = automático
+  silence_ms: 800       # silencio que cierra una frase al hablar
+  threshold: null       # null = se calibra con el ruido ambiente al iniciar
+  device_index: null    # null = micrófono predeterminado de Windows (ver python listen.py --list-mics)
 tts:
   backend: kokoro
   voice: voicelab/packs/am_voz1.pt   # pack de voz clonada con inno-kokoro (Fase 2)

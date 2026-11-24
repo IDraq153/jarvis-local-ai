@@ -33,7 +33,7 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 - [x] 0. Base y hardware
 - [x] 1. Cerebro (LLM)
 - [x] 2. Laboratorio de voces (TTS)
-- [ ] 3. Oído (STT)
+- [x] 3. Oído (STT)
 - [ ] 4. Conversación por voz
 - [ ] 5. Memoria
 - [ ] 6. Herramientas
@@ -42,4 +42,4 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 
 ## Estado
 
-Fases 0 y 1 completadas (cerebro: qwen3:8b vía Ollama, chat por terminal). Siguiente: Fase 2 (laboratorio de voces).
+Fases 0 a 3 completadas: cerebro (qwen3:8b vía Ollama), voz (Kokoro clonada, `chat.py --voz`) y oído (faster-whisper small en CPU, `python listen.py`). Siguiente: Fase 4 (conversación por voz).

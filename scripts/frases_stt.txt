@@ -1,0 +1,12 @@
+Hola Jarvis, ¿qué hora es en Lima?
+Abre el navegador y busca información sobre ciberseguridad.
+Recuérdame que mañana tengo clase de redes a las ocho de la mañana.
+Explícame la diferencia entre una dirección IP y una dirección MAC.
+Necesito practicar para el examen de CCNA uno.
+Ejecuta el servidor de Ollama con el modelo qwen tres.
+Revisa si la tarjeta gráfica tiene memoria libre.
+Crea un archivo nuevo llamado notas punto texto en la carpeta de documentos.
+¿Cuántos gigabytes de VRAM me quedan disponibles?
+Sube los cambios a GitHub con un commit que diga fase tres.
+Dime un resumen del proyecto de la universidad de Lima.
+Apaga la música y baja el volumen a la mitad.

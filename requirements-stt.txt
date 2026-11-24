@@ -1,0 +1,4 @@
+# Fase 3: oído (STT). faster-whisper corre en CPU (int8) en el venv principal.
+faster-whisper
+sounddevice
+numpy
