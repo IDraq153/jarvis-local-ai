@@ -29,6 +29,7 @@ def main():
     ap.add_argument("--sin-voz", action="store_true", help="no sintetiza voz (solo escucha y escribe)")
     ap.add_argument("--debug", action="store_true", help="muestra la latencia de cada turno")
     ap.add_argument("--sin-memoria", action="store_true", help="no usa ni guarda la memoria persistente")
+    ap.add_argument("--sin-herramientas", action="store_true", help="no usa herramientas (UniGym)")
     args = ap.parse_args()
 
     cfg = yaml.safe_load(Path(__file__).with_name("config.yaml").read_text(encoding="utf-8"))
@@ -88,6 +89,29 @@ def main():
                 print(f"\n[memoria desactivada] {e}")
                 memory = None
 
+        tools = None
+        if not args.sin_herramientas:
+            try:
+                from tools.runtime import load_tools
+                from memory import load_embedder
+                embedder = memory.embedder if memory else load_embedder((cfg.get("memory") or {}).get("embedder"))
+                tools = load_tools(cfg, Path(__file__).parent, embedder)
+                if tools:
+                    print("Cargando las herramientas...", end=" ", flush=True)
+                    t0 = time.time()
+                    n = tools.selector.index()
+                    print(f"listas ({n} textos indexados, {time.time() - t0:.1f} s)")
+            except Exception as e:  # las herramientas nunca deben impedir hablar con JARVIS
+                print(f"\n[herramientas desactivadas] {e}")
+                tools = None
+
+        routines = None
+        try:
+            from tools.runtime import load_routines
+            routines = load_routines(cfg, Path(__file__).parent, tools)
+        except Exception as e:
+            print(f"\n[rutinas desactivadas] {e}")
+
         if not threshold:
             print("Midiendo el ruido ambiente (1 s, no hables)...", end=" ", flush=True)
             threshold = calibrate_threshold(mic)
@@ -109,7 +133,7 @@ def main():
 
     loop = VoiceLoop(
         listen=listen, transcribe=stt.transcribe, llm=llm, speaker=speaker,
-        history=[{"role": "system", "content": SYSTEM_PROMPT}], on_heard=on_heard, memory=memory,
+        history=[{"role": "system", "content": SYSTEM_PROMPT}], on_heard=on_heard, memory=memory, tools=tools, routines=routines,
         tail_ms=vcfg.get("tail_ms", 500), max_turns=vcfg.get("max_turns", 8), on_text=on_text)
 
     print('JARVIS en línea. Habla cuando quieras ("salir" termina, "reinicia" borra la conversación).')
@@ -124,8 +148,12 @@ def main():
                 print(f"\r(eco de JARVIS, ignorado: {turn.heard})")
             elif turn.kind == "exit":
                 break
-            elif turn.kind == "memory":
+            elif turn.kind in ("memory", "tool"):
                 print()
+                if args.debug and turn.kind == "tool":
+                    print(f"  [herramienta] {turn.tool or '-'} | selección {turn.tool_select_s * 1000:.0f} ms | "
+                          f"STT {turn.stt_s:.2f} s | 1.er token {turn.llm_first_token_s:.2f} s | "
+                          f"percibido {turn.perceived_s:.2f} s")
             elif turn.kind == "reset":
                 print(f"\r> {turn.heard}\nConversación reiniciada.")
             elif turn.kind == "error":
@@ -136,6 +164,9 @@ def main():
                     print(f"  [turno] oído {turn.audio_s:.1f} s | STT {turn.stt_s:.2f} s | "
                           f"1.er token {turn.llm_first_token_s:.2f} s | 1.er audio +{turn.first_audio_s:.2f} s | "
                           f"percibido {turn.perceived_s:.2f} s")
+                    if tools:
+                        print(f"  [herramientas] ofrecidas: {', '.join(tools.last_selected) or 'ninguna'} "
+                              f"(selección {turn.tool_select_s * 1000:.0f} ms)")
                     if memory:
                         print(f"  [memoria] búsqueda {memory.last_retrieval_s * 1000:.0f} ms, "
                               f"bloque {len(memory.last_block)} car.")

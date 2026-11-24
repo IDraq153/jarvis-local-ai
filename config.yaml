@@ -30,7 +30,7 @@ tts:
   lang_code: e                       # español
   device: cuda
   trim_cache: true                   # libera caché de CUDA tras cada trozo (menos VRAM)
-  speed: 1.1                         # elegido en voicelab.tune
+  speed: 1.3                         # 1.1 elegido en voicelab.tune; Dario lo pidió más rápido (24-nov)
 voice:
   tail_ms: 500          # micro cerrado este tiempo extra tras la última palabra de JARVIS (anti-eco)
   max_turns: 8          # intercambios que recuerda el LLM en el prompt (num_ctx es 4096)
@@ -52,3 +52,22 @@ memory:
   max_block_chars: 1200    # ~300 tokens del contexto de 4096
   summarize_on_exit: true  # al salir: resumen de la sesión + hechos nuevos (usa el LLM, unos segundos)
   min_turns_to_summarize: 2
+unigym:
+  data_path: data/unigym.json       # fuente de verdad compartida con la web (ignorada por git)
+  web_dir: ../uni-gym-tracker       # carpeta de la web, relativa a este repo
+  port: 8080
+  backups_keep: 30                  # copias previas en data/backups/ antes de cada escritura
+tools:
+  enabled: true
+  selector:
+    top_k: 4            # herramientas que se pasan al LLM por turno (bench: 3-8 herramientas ~96 %, 13 ~92 %)
+    min_score: 0.50     # bge-m3: la frase de herramienta más baja midió 0.52; la charla normal llega a 0.75, no hay umbral limpio
+  reply_mode: template  # respuesta de Python (exacta). 'llm' (el LLM redacta; la vuelta 2 costó ~0.06 s) aún no está implementado
+  confirm_ttl_s: 60     # tiempo máximo para decir "sí" a una propuesta de escritura
+routines:
+  casa:                  # "Jarvis, estoy en casa": saluda, dice lo más urgente de UniGym y una frase, y abre el video en Firefox
+    enabled: true
+    url: "https://www.youtube.com/watch?v=xMaE6toi4mk&list=RDxMaE6toi4mk&start_radio=1"
+    allowed_hosts: [youtube.com, youtu.be]   # solo se abre una URL de estos sitios
+    open_with_speech: true                   # true: el video arranca a la vez que JARVIS habla; false: cuando termina de hablar
+    open_delay_s: 1.0                        # solo si open_with_speech es false: pausa tras la última palabra

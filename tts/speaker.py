@@ -55,6 +55,7 @@ class Speaker:
         self._gen = 0
         self._t_feed = None
         self._announced = False
+        self._play_end = 0.0           # instante (perf_counter) en que terminará de sonar lo ya encolado
         self.first_audio_delay: float | None = None
         self.last_error: str | None = None
         for target in (self._synth_loop, self._play_loop):
@@ -80,10 +81,23 @@ class Speaker:
         if abort:
             abort()
         self._t_feed, self._announced = None, False
+        self._play_end = 0.0
 
     def wait(self) -> None:
         self._text_q.join()
         self._audio_q.join()
+
+    def wait_playback(self) -> None:
+        """`wait()` + espera a que lo escrito en la tarjeta de sonido TERMINE de sonar.
+
+        `wait()` vuelve cuando el último trozo entró al buffer del dispositivo, que todavía lo está reproduciendo
+        (con voces largas o buffers grandes de Windows, hasta varios segundos). Se usa antes de abrir el video de
+        «estoy en casa» y de reabrir el micrófono.
+        """
+        self.wait()
+        remaining = self._play_end - time.perf_counter()
+        if remaining > 0:
+            time.sleep(remaining)
 
     def close(self) -> None:
         self.stop()
@@ -128,7 +142,12 @@ class Speaker:
                         self.first_audio_delay = time.perf_counter() - (self._t_feed or time.perf_counter())
                         if self._on_first_audio:
                             self._on_first_audio(self.first_audio_delay)
+                    t0 = time.perf_counter()
                     self._sink(audio)
+                    rate = getattr(audio, "sample_rate", 0) or 0
+                    n = len(getattr(audio, "samples", ()) )
+                    if rate and n:
+                        self._play_end = max(self._play_end, t0) + n / rate
             except Exception as e:  # p. ej. el stream se abortó al hacer stop()
                 self.last_error = str(e)
             finally:

@@ -1,4 +1,4 @@
-from .base import LLMBackend, LLMError
+from .base import LLMBackend, LLMError, ToolCall
 from .ollama_backend import OllamaBackend
 
 

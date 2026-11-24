@@ -4,7 +4,7 @@ from typing import Iterator
 
 import requests
 
-from .base import LLMBackend, LLMError, Message
+from .base import LLMBackend, LLMError, Message, ToolCall
 
 
 class OllamaBackend(LLMBackend):
@@ -23,6 +23,11 @@ class OllamaBackend(LLMBackend):
         self.last_thinking_chars = 0  # diagnóstico: texto de 'pensar' recibido
 
     def stream(self, messages: list[Message], **options) -> Iterator[str]:
+        for item in self.stream_events(messages, None, **options):
+            yield item
+
+    def stream_events(self, messages: list[Message], tools: list[dict] | None = None,
+                      **options) -> Iterator[str | ToolCall]:
         payload = {
             "model": self.model,
             "messages": messages,
@@ -32,6 +37,8 @@ class OllamaBackend(LLMBackend):
         }
         if self.think is not None:
             payload["think"] = self.think
+        if tools:
+            payload["tools"] = tools
         self.last_thinking_chars = 0
         try:
             with requests.post(f"{self.host}/api/chat", json=payload,
@@ -51,6 +58,10 @@ class OllamaBackend(LLMBackend):
                     chunk = msg.get("content", "")
                     if chunk:
                         yield chunk
+                    for call in msg.get("tool_calls") or []:
+                        parsed = _parse_tool_call(call)
+                        if parsed:
+                            yield parsed
                     if data.get("done"):
                         self.last_stats = data
         except requests.ConnectionError as e:
@@ -72,3 +83,18 @@ class OllamaBackend(LLMBackend):
         if s.get("eval_count") and s.get("eval_duration"):
             return s["eval_count"] / (s["eval_duration"] / 1e9)
         return None
+
+
+def _parse_tool_call(raw) -> ToolCall | None:
+    """{"function": {"name": ..., "arguments": {...}}} -> ToolCall (arguments puede venir como texto JSON)."""
+    fn = (raw or {}).get("function") or {}
+    name = fn.get("name")
+    if not isinstance(name, str) or not name:
+        return None
+    args = fn.get("arguments")
+    if isinstance(args, str):
+        try:
+            args = json.loads(args)
+        except ValueError:
+            args = {}
+    return ToolCall(name, args if isinstance(args, dict) else {})

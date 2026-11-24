@@ -11,7 +11,8 @@ que repiten lo que JARVIS acaba de decir.
 import time
 from dataclasses import dataclass, field
 
-from llm import LLMError
+from llm import LLMError, ToolCall
+from tools.runtime import NOT_FROM_DATA, NOT_SAVED, claims_unbacked_write, invents_data, known_context
 from stt.metrics import normalize
 
 EXIT_PHRASES = {"salir", "adios", "hasta luego", "apagate", "apagate jarvis", "jarvis salir"}
@@ -21,6 +22,8 @@ HALLUCINATIONS = {
     "suscribete", "gracias por ver el video", "gracias por ver", "subtitulos",
     "subtitulos por la comunidad de amara org", "amara org", "gracias",
 }
+EMPTY_REPLY = "No te entendí bien. ¿Me lo repites?"
+SHORT_ANSWERS = {"si", "no"}
 
 
 def parse_command(text: str) -> str | None:
@@ -39,6 +42,8 @@ def is_noise(text: str) -> bool:
     if not words:
         return True
     key = " ".join(words)
+    if key in SHORT_ANSWERS:   # "sí" / "no" son respuestas válidas (confirmar o cancelar una escritura)
+        return False
     return key in HALLUCINATIONS or len(key) < 3
 
 
@@ -67,7 +72,7 @@ def trim_history(history: list[dict], max_turns: int) -> list[dict]:
 
 @dataclass
 class Turn:
-    kind: str                    # "reply" | "memory" | "silence" | "noise" | "echo" | "exit" | "reset" | "error"
+    kind: str                    # "reply" | "memory" | "tool" | "silence" | "noise" | "echo" | "exit" | "reset" | "error"
     heard: str = ""
     reply: str = ""
     stt_s: float = 0.0           # transcripción
@@ -76,6 +81,8 @@ class Turn:
     perceived_s: float = 0.0     # fin de tu frase -> primer sonido de JARVIS
     audio_s: float = 0.0         # duración de lo que se grabó
     error: str = ""
+    tool: str = ""               # herramienta usada ("" si ninguna); kind == "tool"
+    tool_select_s: float = 0.0   # tiempo de elegir herramientas con embeddings
 
 
 @dataclass
@@ -91,6 +98,8 @@ class VoiceLoop:
     on_heard: object = None      # callback(str) con lo que se te entendió, antes de responder
     sleep: object = time.sleep
     memory: object | None = None  # memory.Memory (Fase 5) o None: sin memoria a largo plazo
+    tools: object | None = None   # tools.runtime.ToolRuntime (Fase 6) o None: sin herramientas
+    routines: object | None = None  # tools.routines.RoutineRunner ("estoy en casa") o None
     last_reply: str = ""
 
     def _say(self, text: str) -> None:
@@ -98,6 +107,7 @@ class VoiceLoop:
             self.speaker.feed(text)
             self.speaker.finish()
             self.speaker.wait()
+            getattr(self.speaker, "wait_playback", lambda: None)()   # que termine de SONAR, no solo de encolarse
             self.sleep(self.tail_ms / 1000)
 
     def run_turn(self) -> Turn:
@@ -124,9 +134,29 @@ class VoiceLoop:
 
         if self.on_heard:
             self.on_heard(text)
+        prefix = ""
+        if self.tools:  # ¿hay una escritura esperando "sí"? Se resuelve antes que todo lo demás
+            pre = self.tools.before(text)
+            if pre.outcome is not None:
+                return self._tool_turn(text, pre.outcome, base)
+            prefix = pre.prefix
+        if self.routines:  # "Jarvis, estoy en casa": rutina fija, no pasa por el LLM
+            rr = self.routines.match(text)
+            if rr is not None:
+                speech = (prefix + " " + rr.speech).strip()
+                if self.on_text:
+                    self.on_text(speech)
+                self.last_reply = speech
+                if rr.with_speech:
+                    rr.after()             # el video arranca a la vez que JARVIS habla
+                self._say(speech)
+                if not rr.with_speech:
+                    rr.after()             # o, si así se configura, cuando JARVIS terminó de hablar
+                return Turn("tool", reply=speech, tool=rr.tool, **base)
         if self.memory:  # "recuerda que...", "olvida lo de...", "qué sabes de mí": no pasan por el LLM
             answer = self.memory.handle_command(text)
             if answer is not None:
+                answer = (prefix + " " + answer).strip()
                 if self.on_text:
                     self.on_text(answer)
                 self._say(answer)
@@ -135,13 +165,27 @@ class VoiceLoop:
         messages = trim_history(self.history, self.max_turns)
         if self.memory:  # añade al prompt de sistema lo recordado (el historial no se toca)
             messages = self.memory.augment(messages, text)
+        schemas, select_s = None, 0.0
+        if self.tools:  # elige las herramientas más parecidas y añade la guía al prompt de sistema
+            messages, schemas = self.tools.prepare(messages, text)
+            select_s = self.tools.last_select_s
         if self.speaker:
             self.speaker.stop()
-        reply, ttft, t_llm = "", None, time.perf_counter()
+        reply, ttft, t_llm, call = "", None, time.perf_counter(), None
+        if prefix:  # "Descarté lo que estaba pendiente." antes de atender la orden nueva
+            if self.on_text:
+                self.on_text(prefix + " ")
+            if self.speaker:
+                self.speaker.feed(prefix + " ")
+            reply = prefix + " "
         try:
-            for chunk in self.llm.stream(messages):
+            events = self.llm.stream_events(messages, tools=schemas) if schemas else self.llm.stream(messages)
+            for chunk in events:
                 if ttft is None:
                     ttft = time.perf_counter() - t_llm
+                if isinstance(chunk, ToolCall):
+                    call = call or chunk  # una herramienta por turno
+                    continue
                 if self.on_text:
                     self.on_text(chunk)
                 if self.speaker:
@@ -152,11 +196,48 @@ class VoiceLoop:
                 self.speaker.stop()
             self.history.pop()
             return Turn("error", error=str(e), **base)
+        if call is None and not reply.replace(prefix, "").strip():   # el LLM no dijo nada: mejor pedir que repita
+            reply = (reply + EMPTY_REPLY).strip()
+            if self.on_text:
+                self.on_text(EMPTY_REPLY)
+            if self.speaker:
+                self.speaker.feed(EMPTY_REPLY)
+        if call is not None:  # el LLM eligió una herramienta: Python responde (exacto) o pide confirmación
+            out = self.tools.execute(call, text)
+            say = out.text  # si había prefijo, ya se dijo antes
+            if self.on_text:
+                self.on_text(("\n" if reply.strip() and not prefix else "") + say)
+            if self.speaker:
+                self.speaker.feed(say)
+                self.speaker.finish()
+            reply = (prefix + " " + say).strip() if prefix else say
+            self.tools.remember(self.history, call, out)   # ver ToolRuntime.remember: no se guardan preguntas ni confirmaciones
+            self.last_reply = reply
+            if self.speaker:
+                self.speaker.wait()
+                self.sleep(self.tail_ms / 1000)
+            first_audio = (getattr(self.speaker, "first_audio_delay", None) or 0.0) if self.speaker else 0.0
+            ttft = ttft or 0.0
+            return Turn("tool", reply=reply, llm_first_token_s=ttft, first_audio_s=first_audio, tool=call.name,
+                        tool_select_s=select_s, perceived_s=stt_s + select_s + ttft + first_audio, **base)
+        if self.tools and call is None:
+            self.tools.plain_turn()
+        warn = NOT_SAVED if (schemas and self.tools and claims_unbacked_write(reply)) else \
+            NOT_FROM_DATA if (self.tools and invents_data(reply, known_context(text, self.history))) else ""
+        if warn:   # dijo que guardó algo, o dio notas/promedios, sin usar ninguna herramienta
+            reply += warn
+            if self.on_text:
+                self.on_text(warn)
+            if self.speaker:
+                self.speaker.feed(warn)
         if self.speaker:
             self.speaker.finish()
-        self.history.append({"role": "assistant", "content": reply})
+        if warn:          # una respuesta falsa no entra al historial: el LLM la imitaría en el turno siguiente
+            self.history.pop()
+        else:
+            self.history.append({"role": "assistant", "content": reply})
         self.last_reply = reply
-        if self.memory:  # se guarda mientras JARVIS aún habla: no suma latencia
+        if self.memory and not warn:  # se guarda mientras JARVIS aún habla: no suma latencia
             self.memory.record_turn(text, reply)
         first_audio = (getattr(self.speaker, "first_audio_delay", None) or 0.0) if self.speaker else 0.0
         if self.speaker:
@@ -164,4 +245,14 @@ class VoiceLoop:
             self.sleep(self.tail_ms / 1000)
         ttft = ttft or 0.0
         return Turn("reply", reply=reply, llm_first_token_s=ttft, first_audio_s=first_audio,
-                    perceived_s=stt_s + ttft + first_audio, **base)
+                    tool_select_s=select_s, perceived_s=stt_s + select_s + ttft + first_audio, **base)
+
+    def _tool_turn(self, text: str, out, base: dict) -> Turn:
+        """Respuesta a una confirmación pendiente ("sí"/"no"): no pasa por el LLM."""
+        if self.on_text:
+            self.on_text(out.text)
+        self.last_reply = out.text      # preguntas/confirmaciones no entran al historial; lecturas sí (formato nativo)
+        if self.tools:
+            self.tools.remember_direct(self.history, text, out)
+        self._say(out.text)
+        return Turn("tool", reply=out.text, tool=out.tool, **base)

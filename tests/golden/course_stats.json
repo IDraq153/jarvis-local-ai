@@ -1,0 +1,536 @@
+{
+ "courses": [
+  {
+   "id": "c0",
+   "evals": []
+  },
+  {
+   "id": "c1",
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 25,
+     "grade": null,
+     "date": "",
+     "status": "pendiente"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 25,
+     "grade": null,
+     "date": "",
+     "status": "pendiente"
+    },
+    {
+     "id": "e3",
+     "name": "EVA 3",
+     "weight": 50,
+     "grade": null,
+     "date": "2099-01-01",
+     "status": "pendiente"
+    }
+   ]
+  },
+  {
+   "id": "c2",
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 20,
+     "grade": 14,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 30,
+     "grade": 16,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e3",
+     "name": "EVA 3",
+     "weight": 25,
+     "grade": null,
+     "date": "2099-01-01",
+     "status": "pendiente"
+    },
+    {
+     "id": "e4",
+     "name": "EVA 4",
+     "weight": 25,
+     "grade": null,
+     "date": "2098-06-01",
+     "status": "pendiente"
+    }
+   ]
+  },
+  {
+   "id": "c3",
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 40,
+     "grade": 15,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 60,
+     "grade": 12,
+     "date": "",
+     "status": "calificada"
+    }
+   ]
+  },
+  {
+   "id": "c4",
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 40,
+     "grade": 8,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 60,
+     "grade": 10,
+     "date": "",
+     "status": "calificada"
+    }
+   ]
+  },
+  {
+   "id": "c5",
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 60,
+     "grade": 4,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 20,
+     "grade": null,
+     "date": "2099-01-01",
+     "status": "pendiente"
+    },
+    {
+     "id": "e3",
+     "name": "EVA 3",
+     "weight": 20,
+     "grade": null,
+     "date": "2000-01-01",
+     "status": "pendiente"
+    }
+   ]
+  },
+  {
+   "id": "c6",
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 70,
+     "grade": 18,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 30,
+     "grade": null,
+     "date": "2099-01-01",
+     "status": "pendiente"
+    }
+   ]
+  },
+  {
+   "id": "c7",
+   "minGrade": 13,
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 33.33,
+     "grade": 13.5,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 33.33,
+     "grade": 11,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e3",
+     "name": "EVA 3",
+     "weight": 33.34,
+     "grade": null,
+     "date": "2099-01-01",
+     "status": "pendiente"
+    }
+   ]
+  },
+  {
+   "id": "c8",
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": "25",
+     "grade": 15,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": "75",
+     "grade": "15",
+     "status": "calificada"
+    }
+   ]
+  },
+  {
+   "id": "c9",
+   "minGrade": 14,
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 10,
+     "grade": 20,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 15,
+     "grade": 0,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e3",
+     "name": "EVA 3",
+     "weight": 75,
+     "grade": null,
+     "date": "2099-01-01",
+     "status": "pendiente"
+    }
+   ]
+  },
+  {
+   "id": "c10",
+   "evals": [
+    {
+     "id": "e1",
+     "name": "EVA 1",
+     "weight": 30,
+     "grade": 12.25,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e2",
+     "name": "EVA 2",
+     "weight": 30,
+     "grade": 13.75,
+     "date": "",
+     "status": "calificada"
+    },
+    {
+     "id": "e3",
+     "name": "EVA 3",
+     "weight": 40,
+     "grade": null,
+     "date": "2000-01-01",
+     "status": "pendiente"
+    }
+   ]
+  }
+ ],
+ "goals": [
+  10.5,
+  12,
+  15,
+  18
+ ],
+ "expected": [
+  {
+   "id": "c0",
+   "totalWeight": 0,
+   "gradedWeight": 0,
+   "pendingWeight": 0,
+   "points": 0,
+   "average": null,
+   "minGrade": 10.5,
+   "neededToPass": null,
+   "maxFinal": 0,
+   "statusKey": "neutral",
+   "statusLabel": "Sin evaluaciones",
+   "nextEval": null,
+   "gradedCount": 0,
+   "pendingCount": 0,
+   "finished": false,
+   "needed": [
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  {
+   "id": "c1",
+   "totalWeight": 100,
+   "gradedWeight": 0,
+   "pendingWeight": 100,
+   "points": 0,
+   "average": null,
+   "minGrade": 10.5,
+   "neededToPass": 10.5,
+   "maxFinal": 20,
+   "statusKey": "neutral",
+   "statusLabel": "Sin notas aún",
+   "nextEval": "e3",
+   "gradedCount": 0,
+   "pendingCount": 3,
+   "finished": false,
+   "needed": [
+    10.5,
+    12,
+    15,
+    18
+   ]
+  },
+  {
+   "id": "c2",
+   "totalWeight": 100,
+   "gradedWeight": 50,
+   "pendingWeight": 50,
+   "points": 7.6,
+   "average": 15.2,
+   "minGrade": 10.5,
+   "neededToPass": 5.800000000000001,
+   "maxFinal": 17.6,
+   "statusKey": "ok",
+   "statusLabel": "Seguro",
+   "nextEval": "e4",
+   "gradedCount": 2,
+   "pendingCount": 2,
+   "finished": false,
+   "needed": [
+    5.800000000000001,
+    8.8,
+    14.8,
+    20.8
+   ]
+  },
+  {
+   "id": "c3",
+   "totalWeight": 100,
+   "gradedWeight": 100,
+   "pendingWeight": 0,
+   "points": 13.2,
+   "average": 13.200000000000001,
+   "minGrade": 10.5,
+   "neededToPass": null,
+   "maxFinal": 13.2,
+   "statusKey": "ok",
+   "statusLabel": "Aprobado",
+   "nextEval": null,
+   "gradedCount": 2,
+   "pendingCount": 0,
+   "finished": true,
+   "needed": [
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  {
+   "id": "c4",
+   "totalWeight": 100,
+   "gradedWeight": 100,
+   "pendingWeight": 0,
+   "points": 9.2,
+   "average": 9.2,
+   "minGrade": 10.5,
+   "neededToPass": null,
+   "maxFinal": 9.2,
+   "statusKey": "bad",
+   "statusLabel": "Desaprobado",
+   "nextEval": null,
+   "gradedCount": 2,
+   "pendingCount": 0,
+   "finished": true,
+   "needed": [
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  {
+   "id": "c5",
+   "totalWeight": 100,
+   "gradedWeight": 60,
+   "pendingWeight": 40,
+   "points": 2.4,
+   "average": 4,
+   "minGrade": 10.5,
+   "neededToPass": 20.249999999999996,
+   "maxFinal": 10.4,
+   "statusKey": "bad",
+   "statusLabel": "Ya no alcanza",
+   "nextEval": "e2",
+   "gradedCount": 1,
+   "pendingCount": 2,
+   "finished": false,
+   "needed": [
+    20.249999999999996,
+    23.999999999999996,
+    31.499999999999996,
+    39
+   ]
+  },
+  {
+   "id": "c6",
+   "totalWeight": 100,
+   "gradedWeight": 70,
+   "pendingWeight": 30,
+   "points": 12.6,
+   "average": 18,
+   "minGrade": 10.5,
+   "neededToPass": -6.999999999999999,
+   "maxFinal": 18.6,
+   "statusKey": "ok",
+   "statusLabel": "Aprobado asegurado",
+   "nextEval": "e2",
+   "gradedCount": 1,
+   "pendingCount": 1,
+   "finished": false,
+   "needed": [
+    -6.999999999999999,
+    -1.999999999999999,
+    8.000000000000002,
+    18.000000000000004
+   ]
+  },
+  {
+   "id": "c7",
+   "totalWeight": 100,
+   "gradedWeight": 66.66,
+   "pendingWeight": 33.34,
+   "points": 8.16585,
+   "average": 12.250000000000002,
+   "minGrade": 13,
+   "neededToPass": 14.499550089982,
+   "maxFinal": 14.833850000000002,
+   "statusKey": "warn",
+   "statusLabel": "En riesgo",
+   "nextEval": "e3",
+   "gradedCount": 2,
+   "pendingCount": 1,
+   "finished": false,
+   "needed": [
+    7.001049790041989,
+    11.500149970005996,
+    20.49835032993401,
+    29.496550689862023
+   ]
+  },
+  {
+   "id": "c8",
+   "totalWeight": 100,
+   "gradedWeight": 25,
+   "pendingWeight": 75,
+   "points": 3.75,
+   "average": 15,
+   "minGrade": 10.5,
+   "neededToPass": 9,
+   "maxFinal": 18.75,
+   "statusKey": "ok",
+   "statusLabel": "Seguro",
+   "nextEval": null,
+   "gradedCount": 1,
+   "pendingCount": 1,
+   "finished": false,
+   "needed": [
+    9,
+    11,
+    15,
+    19
+   ]
+  },
+  {
+   "id": "c9",
+   "totalWeight": 100,
+   "gradedWeight": 25,
+   "pendingWeight": 75,
+   "points": 2,
+   "average": 8,
+   "minGrade": 14,
+   "neededToPass": 16,
+   "maxFinal": 17,
+   "statusKey": "warn",
+   "statusLabel": "En riesgo",
+   "nextEval": "e3",
+   "gradedCount": 2,
+   "pendingCount": 1,
+   "finished": false,
+   "needed": [
+    11.333333333333334,
+    13.333333333333334,
+    17.333333333333332,
+    21.333333333333332
+   ]
+  },
+  {
+   "id": "c10",
+   "totalWeight": 100,
+   "gradedWeight": 60,
+   "pendingWeight": 40,
+   "points": 7.8,
+   "average": 13,
+   "minGrade": 10.5,
+   "neededToPass": 6.75,
+   "maxFinal": 15.8,
+   "statusKey": "ok",
+   "statusLabel": "Seguro",
+   "nextEval": null,
+   "gradedCount": 2,
+   "pendingCount": 1,
+   "finished": false,
+   "needed": [
+    6.75,
+    10.5,
+    18,
+    25.499999999999996
+   ]
+  }
+ ]
+}
