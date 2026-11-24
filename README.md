@@ -34,7 +34,7 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 - [x] 1. Cerebro (LLM)
 - [x] 2. Laboratorio de voces (TTS)
 - [x] 3. Oído (STT)
-- [ ] 4. Conversación por voz
+- [x] 4. Conversación por voz
 - [ ] 5. Memoria
 - [ ] 6. Herramientas
 - [ ] 7. Interfaz futurista
@@ -42,4 +42,4 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 
 ## Estado
 
-Fases 0 a 3 completadas: cerebro (qwen3:8b vía Ollama), voz (Kokoro clonada, `chat.py --voz`) y oído (faster-whisper small en CPU, `python listen.py`). Siguiente: Fase 4 (conversación por voz).
+Fases 0 a 4 completadas: cerebro (qwen3:8b vía Ollama), voz (Kokoro clonada, `chat.py --voz`) y oído (faster-whisper small en CPU, `python listen.py`). Conversación por voz completa con `python voice_chat.py --debug` (docs/fase4.md). Siguiente: Fase 5 (memoria).
