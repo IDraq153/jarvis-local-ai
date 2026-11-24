@@ -1,0 +1,62 @@
+{
+ "qwen2.5:7b-instruct-q4_K_M": {
+  "tps": 76.73102199013391,
+  "load_s": 7.5743376,
+  "vram_gb": 4.428808592259884,
+  "size_gb": 4.428808592259884,
+  "answers": [
+   {
+    "prompt": "Preséntate en dos frases.",
+    "answer": "Hola Dario, soy JARVIS, tu asistente personal. Estoy aquí para ayudarte de manera discreta y eficiente en tus tareas diarias."
+   },
+   {
+    "prompt": "Explícame en tres líneas qué es una VLAN, para alguien que cursa CCNA 1.",
+    "answer": "Una VLAN (Virtual Local Area Network) es un grupo de dispositivos que se comunican como si estuvieran en la misma red local, independientemente de su ubicación física. Esto se logra mediante configuraciones de software en switches Ethernet, permitiendo la segmentación lógica de la red. Dario, esto ayuda a mejorar la seguridad y la gestión de la red, además de optimizar el rendimiento."
+   },
+   {
+    "prompt": "Dame un plan de estudio de 3 pasos para el examen de redes de mañana.",
+    "answer": "Claro, aquí tienes un plan de estudio de 3 pasos para tu examen de redes mañana:\n\n1. **Revisa los conceptos básicos**: Vuelve a leer las secciones sobre topologías de red, tipos de redes (LAN, WAN, MAN), y los protocolos de capa de red. Enfócate en entender la estructura y funcionalidad de las redes.\n\n2. **Practica con ejercicios**: Trabaja con ejercicios que involucren la configuración y resolución de problemas de redes. Puedes usar diagramas para practicar la identificación de problemas y la solución de rutas.\n\n3. **Resumen y repaso**: Haz un resumen de las reglas clave y conceptos que más te costen. Practica preguntas de múltiple elección y ensayos previas de tu curso para asegurarte de que estás preparado para cualquier tipo de pregunta.\n\n¡Buena suerte!"
+   }
+  ]
+ },
+ "llama3.1:8b-instruct-q4_K_M": {
+  "tps": 72.36860374777635,
+  "load_s": 6.4340643,
+  "vram_gb": 4.917480467818677,
+  "size_gb": 4.917480467818677,
+  "answers": [
+   {
+    "prompt": "Preséntate en dos frases.",
+    "answer": "Soy JARVIS, tu asistente personal de inteligencia artificial diseñado para optimizar y automatizar tus tareas y procesos en tu computadora. Estoy aquí para ayudarte en todo lo que necesites, desde la gestión de archivos hasta la asistencia en la resolución de problemas."
+   },
+   {
+    "prompt": "Explícame en tres líneas qué es una VLAN, para alguien que cursa CCNA 1.",
+    "answer": "Una VLAN (Virtual Local Area Network) es una red lógica dentro de una red física que permite segmentar y organizar el tráfico de red de manera eficiente.\n\nAsí se evita que todos los dispositivos de la red interactúen entre sí directamente, lo que aumenta la seguridad y mejora el desempeño de la red.\n\nLas VLANs se pueden configurar en routers y switches para definir y aislar áreas específicas de la red."
+   },
+   {
+    "prompt": "Dame un plan de estudio de 3 pasos para el examen de redes de mañana.",
+    "answer": "Claro, Darío. Aquí te dejo un plan de estudio rápido y enfocado para el examen de redes de mañana:\n\n1. **Revisión de conceptos básicos**: Revisa las redes de área local, estatal y de área amplia. Asegúrate de entender los protocolos TCP/IP, DNS y DHCP.\n2. **Análisis de topologías y protocolos**: Revisa las diferentes topologías de redes (estrella, bus, etc.) y los protocolos de comunicación (HTTP, FTP, etc.).\n3. **Práctica con simuladores**: Utiliza un simulador de red para practicar configuraciones y resolución de problemas. Esto te ayudará a familiarizarte con la configuración de routers y switches.\n\nRecuerda que cada minuto cuenta, así que enfócate en lo esencial. Si necesitas más ayuda, puedo proporcionarte recursos adicionales."
+   }
+  ]
+ },
+ "qwen3:8b": {
+  "tps": 45.33459840149121,
+  "load_s": 6.7289598,
+  "vram_gb": 5.2029199209064245,
+  "size_gb": 5.2029199209064245,
+  "answers": [
+   {
+    "prompt": "Preséntate en dos frases.",
+    "answer": "Soy JARVIS, el asistente personal de inteligencia artificial de Dario. Estoy aquí para ayudarle con lo que necesite, siempre que sea posible."
+   },
+   {
+    "prompt": "Explícame en tres líneas qué es una VLAN, para alguien que cursa CCNA 1.",
+    "answer": "Una VLAN es una red lógica que divide una red física en múltiples redes virtuales. Permite agrupar dispositivos según función o departamento, no por ubicación física. Facilita la gestión y seguridad de la red."
+   },
+   {
+    "prompt": "Dame un plan de estudio de 3 pasos para el examen de redes de mañana.",
+    "answer": "**Plan de estudio de 3 pasos para el examen de redes de mañana:**\n\n1. **Revisa los conceptos clave** – Dedica 30 minutos a repasar los temas principales: protocolos (TCP/IP, HTTP, DNS), arquitecturas de red (cliente-servidor, peer-to-peer), capas OSI y TCP/IP, y conceptos básicos de seguridad (firewalls, encriptación).  \n2. **Haz un resumen visual** – Usa 15 minutos para crear un mapa mental o lista de puntos clave en papel o en tu mente. Enfócate en definiciones, ejemplos y cómo se relacionan los conceptos.  \n3. **Practica con ejercicios breves** – Dedica 15 minutos a resolver 3-5 preguntas de tipo test o problemas sencillos sobre configuración de redes, rutas, o resolución de conflictos.  \n\n**¡Buena suerte!** Si necesitas ayuda con algo específico, avísame."
+   }
+  ]
+ }
+}

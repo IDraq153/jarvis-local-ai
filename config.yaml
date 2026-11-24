@@ -1,6 +1,16 @@
 llm:
   backend: ollama
-  model: null
+  model: qwen3:8b      # candidato elegido tras el benchmark (docs/fase1_bench.md); alternativa: qwen2.5:7b-instruct-q4_K_M
+  think: false         # sin modo "pensar" (solo afecta a modelos con razonamiento, como qwen3)
+  host: http://127.0.0.1:11434
+  keep_alive: 10m
+  options:
+    temperature: 0.7
+    num_ctx: 4096
+  candidates:
+    - qwen2.5:7b-instruct-q4_K_M
+    - llama3.1:8b-instruct-q4_K_M
+    - qwen3:8b
 stt:
   backend: faster-whisper
   model: null

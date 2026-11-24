@@ -31,7 +31,7 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 ## Fases
 
 - [x] 0. Base y hardware
-- [ ] 1. Cerebro (LLM)
+- [x] 1. Cerebro (LLM)
 - [ ] 2. Laboratorio de voces (TTS)
 - [ ] 3. Oído (STT)
 - [ ] 4. Conversación por voz
@@ -42,4 +42,4 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 
 ## Estado
 
-Fase 0 completada. Siguiente: Fase 1 (cerebro LLM).
+Fases 0 y 1 completadas (cerebro: qwen3:8b vía Ollama, chat por terminal). Siguiente: Fase 2 (laboratorio de voces).
