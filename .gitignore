@@ -1,0 +1,17 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+models/
+*.gguf
+*.onnx
+*.pt
+*.safetensors
+*.wav
+*.mp3
+chroma_db/
+*.sqlite
+*.db
+.idea/
+.vscode/

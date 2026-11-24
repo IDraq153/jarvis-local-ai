@@ -1,0 +1,9 @@
+llm:
+  backend: ollama
+  model: null
+stt:
+  backend: faster-whisper
+  model: null
+tts:
+  backend: piper
+  voice: null
