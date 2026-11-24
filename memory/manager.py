@@ -17,7 +17,7 @@ from .commands import parse_memory_command
 from .embeddings import EmbedError, Embedder
 from .extract import build_messages, parse_extraction
 from .store import Fact, MemoryStore
-from .text import content_words, looks_secret
+from .text import content_words, is_standing, looks_secret
 
 
 @dataclass
@@ -117,7 +117,8 @@ class Memory:
             self._warn_once(f"[memoria] no pude guardar el turno: {e}")
 
     # ---------- hechos ----------
-    def remember(self, text: str, source: str = "explicit") -> tuple[str, Fact | None]:
+    def remember(self, text: str, source: str = "explicit",
+                 pinned: bool | None = None) -> tuple[str, Fact | None]:
         text = " ".join(text.split())
         if not text:
             return "empty", None
@@ -126,7 +127,17 @@ class Memory:
         vecs = self._embed([text])
         vec = vecs[0] if vecs is not None else None
         return self.store.add_fact(text, vec, self.embedder.model, source, self.session_id,
-                                   self.cfg.dedupe_score, self.clock())
+                                   self.cfg.dedupe_score, self.clock(),
+                                   pinned=is_standing(text) if pinned is None else pinned)
+
+    def set_name(self, name: str) -> Fact:
+        """Cómo debe llamarlo JARVIS. Un solo nombre vigente: el nuevo reemplaza al anterior."""
+        self.store.delete_by_source("name")
+        vecs = self._embed([name])
+        _, fact = self.store.add_fact(f"Llama a Dario «{name}»: así lo pidió él", 
+                                      vecs[0] if vecs is not None else None, self.embedder.model, "name",
+                                      self.session_id, 2.0, self.clock(), pinned=True)
+        return fact
 
     def facts(self) -> list[Fact]:
         return self.store.all_facts()
@@ -150,6 +161,11 @@ class Memory:
         if cmd is None:
             return None
         kind, arg = cmd
+        if kind == "name":
+            if looks_secret(arg):
+                return "Prefiero no guardar eso."
+            self.set_name(arg)
+            return f"Entendido, a partir de ahora te llamaré {arg}."
         if kind == "remember":
             status, _ = self.remember(arg)
             return {"added": "Anotado, Dario.", "updated": "Actualizado, Dario.",
@@ -206,19 +222,26 @@ class Memory:
 
     def _build_block(self, query: str) -> str:
         has_prev = self._prev_summary is not None
-        if len(content_words(query)) < 2 and not has_prev:
+        pinned = self.store.pinned_facts()[:5]
+        n_words = len(content_words(query))
+        if not pinned and n_words < 2 and not has_prev:
             return ""
         now = self.clock()
         facts, episodes = [], []
-        if len(content_words(query)) >= 2:
+        if n_words >= 2:
             vecs = self._embed([query])
             qv = vecs[0] if vecs is not None else None
             model = self.embedder.model
             facts = [f for _, f in self.store.search_facts(qv, query, model, self.cfg.top_facts,
-                                                          self.cfg.min_fact_score)]
+                                                          self.cfg.min_fact_score) if not f.pinned]
             episodes = [t for _, t in self.store.search_turns(qv, query, model, self.cfg.top_episodes,
                                                               self.cfg.min_episode_score, self.session_id)]
         parts, budget = [], self.cfg.max_block_chars
+        if pinned:  # instrucciones permanentes: SIEMPRE, sin depender de que el tema se parezca
+            lines = [f"- {f.text[:200]}" for f in pinned]
+            budget -= sum(len(x) + 1 for x in lines)
+            parts.append("Instrucciones de Dario (tienen prioridad sobre tu estilo por defecto; "
+                         "cúmplelas siempre, sin que te las recuerde):\n" + "\n".join(lines))
         if facts:
             lines = []
             for f in facts:

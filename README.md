@@ -35,11 +35,11 @@ Cada módulo expone una interfaz fija, así se puede cambiar un modelo sin recon
 - [x] 2. Laboratorio de voces (TTS)
 - [x] 3. Oído (STT)
 - [x] 4. Conversación por voz
-- [ ] 5. Memoria (implementada; falta verificar con Ollama real, ver docs/fase5.md)
+- [x] 5. Memoria persistente
 - [ ] 6. Herramientas
 - [ ] 7. Interfaz futurista
 - [ ] 8. Pulido offline
 
 ## Estado
 
-Fases 0 a 4 completadas: cerebro (qwen3:8b vía Ollama), voz (Kokoro clonada, `chat.py --voz`) y oído (faster-whisper small en CPU, `python listen.py`). Conversación por voz completa con `python voice_chat.py --debug` (docs/fase4.md). Fase 5 (memoria persistente con SQLite y vectores) implementada y probada con pruebas unitarias; falta medirla con Ollama real (docs/fase5.md).
+Fases 0 a 4 completadas: cerebro (qwen3:8b vía Ollama), voz (Kokoro clonada, `chat.py --voz`) y oído (faster-whisper small en CPU, `python listen.py`). Conversación por voz completa con `python voice_chat.py --debug` (docs/fase4.md). Fase 5 completada: memoria persistente con SQLite y vectores (bge-m3 en CPU), ver docs/fase5.md. Siguiente: Fase 6 (herramientas).

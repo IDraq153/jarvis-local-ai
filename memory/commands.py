@@ -8,6 +8,8 @@ _REMEMBER = [["recuerda", "que"], ["acuerdate", "de", "que"], ["acuerdate", "que
              ["apunta", "que"], ["guarda", "en", "memoria", "que"], ["recuerda"]]
 _FORGET = [["olvida", "que"], ["olvida", "lo", "de"], ["olvidate", "de"], ["borra", "de", "la", "memoria"],
            ["olvida"]]
+_NAME = [["quiero", "que", "me", "llames"], ["puedes", "llamarme"], ["ahora", "llamame"], ["llamame"]]
+_NAME_FILLER = {"como", "por", "solo", "simplemente", "mejor"}
 _LIST = {"que sabes de mi", "que sabes sobre mi", "que recuerdas de mi", "que recuerdas sobre mi",
          "que has aprendido de mi", "que cosas sabes de mi"}
 
@@ -26,6 +28,14 @@ def parse_memory_command(text: str) -> tuple[str, str] | None:
         return None
     if " ".join(keys) in _LIST:
         return "list", ""
+    for p in _NAME:
+        if keys[:len(p)] == p:
+            rest = [(w.strip(".,;:!?¡¿\"'()"), k) for w, k in zip(ws[len(p):], keys[len(p):])]
+            while rest and rest[0][1] in _NAME_FILLER:
+                rest = rest[1:]
+            if 1 <= len(rest) <= 3:
+                return "name", " ".join(w for w, _ in rest)
+            break
     for kind, prefixes in (("remember", _REMEMBER), ("forget", _FORGET)):
         for p in prefixes:  # los prefijos largos van primero
             if keys[:len(p)] == p:

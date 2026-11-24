@@ -13,6 +13,7 @@ _INSTRUCTIONS = """Lees una conversación entre Dario y JARVIS y devuelves SOLO 
 Reglas para "hechos":
 - Solo datos duraderos sobre Dario que él mismo dijo: estudios, proyectos, gustos, personas, decisiones, rutinas, preferencias.
 - En tercera persona y frases cortas, p. ej. "Dario estudia Ingeniería de Sistemas".
+- Si Dario pidió cómo quiere que JARVIS lo trate o le responda (nombre, tono, idioma, extensión), inclúyelo como "Dario quiere que JARVIS lo llame ..." / "Dario quiere que JARVIS ...".
 - No incluyas lo que dijo JARVIS, datos pasajeros, contraseñas, números de documento ni de tarjeta.
 - Máximo 5. Si no hay nada que valga la pena, usa [].
 Responde siempre en español."""

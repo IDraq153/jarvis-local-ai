@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .text import content_words, words
+from .text import content_words, is_standing, words
 
 LEXICAL_MIN = 0.4  # umbral de la búsqueda por palabras (sin embeddings)
 
@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS sessions(
     id INTEGER PRIMARY KEY, started REAL NOT NULL, ended REAL, summary TEXT, turns INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS facts(
     id INTEGER PRIMARY KEY, text TEXT NOT NULL, source TEXT NOT NULL, session_id INTEGER,
-    created REAL NOT NULL, updated REAL NOT NULL, embedding BLOB, embed_model TEXT);
+    created REAL NOT NULL, updated REAL NOT NULL, embedding BLOB, embed_model TEXT,
+    pinned INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS turns(
     id INTEGER PRIMARY KEY, session_id INTEGER NOT NULL, ts REAL NOT NULL,
     user_text TEXT NOT NULL, reply_text TEXT NOT NULL, embedding BLOB, embed_model TEXT);
@@ -37,6 +38,7 @@ class Fact:
     source: str
     created: float
     updated: float
+    pinned: bool = False
 
 
 @dataclass
@@ -60,12 +62,22 @@ class MemoryStore:
         self.db.row_factory = sqlite3.Row
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.executescript(_SCHEMA)
-        self.db.execute("PRAGMA user_version = 1")
+        self._migrate()
+        self.db.execute("PRAGMA user_version = 2")
         self.db.commit()
         self._cache: dict = {}  # (tabla, modelo) -> {"ids", "sess", "mat"}
 
     def close(self):
         self.db.close()
+
+    def _migrate(self) -> None:
+        """v1 -> v2: columna `pinned`; los hechos que ya eran instrucciones se fijan solos."""
+        cols = {r["name"] for r in self.db.execute("PRAGMA table_info(facts)")}
+        if "pinned" not in cols:
+            self.db.execute("ALTER TABLE facts ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0")
+            for r in self.db.execute("SELECT id, text FROM facts").fetchall():
+                if is_standing(r["text"]):
+                    self.db.execute("UPDATE facts SET pinned=1 WHERE id=?", (r["id"],))
 
     # ---------- sesiones ----------
     def start_session(self, now: float | None = None) -> int:
@@ -106,7 +118,7 @@ class MemoryStore:
     # ---------- hechos ----------
     def add_fact(self, text: str, vec: np.ndarray | None, model: str | None, source: str,
                  session_id: int | None, dedupe_score: float = 0.90,
-                 now: float | None = None) -> tuple[str, Fact]:
+                 now: float | None = None, pinned: bool = False) -> tuple[str, Fact]:
         """Guarda un hecho. Si ya hay uno casi igual lo ACTUALIZA (gana el más nuevo):
         así 'ahora vivo en X' corrige al antiguo en vez de duplicarlo."""
         now = now or time.time()
@@ -121,17 +133,18 @@ class MemoryStore:
                     dup_id = r["id"]
                     break
         if dup_id is not None:
-            self.db.execute("UPDATE facts SET text=?, updated=?, embedding=?, embed_model=? WHERE id=?",
+            self.db.execute("UPDATE facts SET text=?, updated=?, embedding=?, embed_model=?, "
+                            "pinned=MAX(pinned, ?) WHERE id=?",
                             (text, now, _pack(vec) if vec is not None else None,
-                             model if vec is not None else None, dup_id))
+                             model if vec is not None else None, int(pinned), dup_id))
             self.db.commit()
             self._cache.pop(("facts", model), None)
             return "updated", self.get_fact(dup_id)
         cur = self.db.execute(
-            "INSERT INTO facts(text, source, session_id, created, updated, embedding, embed_model) "
-            "VALUES (?,?,?,?,?,?,?)",
+            "INSERT INTO facts(text, source, session_id, created, updated, embedding, embed_model, pinned) "
+            "VALUES (?,?,?,?,?,?,?,?)",
             (text, source, session_id, now, now,
-             _pack(vec) if vec is not None else None, model if vec is not None else None))
+             _pack(vec) if vec is not None else None, model if vec is not None else None, int(pinned)))
         self.db.commit()
         self._cache.pop(("facts", model), None)
         return "added", self.get_fact(cur.lastrowid)
@@ -143,6 +156,21 @@ class MemoryStore:
     def all_facts(self) -> list[Fact]:
         rows = self.db.execute("SELECT * FROM facts ORDER BY updated DESC, id DESC").fetchall()
         return [self._fact(r) for r in rows]
+
+    def pinned_facts(self) -> list[Fact]:
+        rows = self.db.execute("SELECT * FROM facts WHERE pinned=1 ORDER BY updated DESC, id DESC").fetchall()
+        return [self._fact(r) for r in rows]
+
+    def set_pinned(self, fid: int, pinned: bool) -> bool:
+        cur = self.db.execute("UPDATE facts SET pinned=? WHERE id=?", (int(pinned), fid))
+        self.db.commit()
+        return cur.rowcount > 0
+
+    def delete_by_source(self, source: str) -> int:
+        cur = self.db.execute("DELETE FROM facts WHERE source=?", (source,))
+        self.db.commit()
+        self._cache.clear()
+        return cur.rowcount
 
     def delete_fact(self, fid: int) -> bool:
         cur = self.db.execute("DELETE FROM facts WHERE id=?", (fid,))
@@ -196,7 +224,7 @@ class MemoryStore:
     # ---------- internos ----------
     @staticmethod
     def _fact(r) -> Fact:
-        return Fact(r["id"], r["text"], r["source"], r["created"], r["updated"])
+        return Fact(r["id"], r["text"], r["source"], r["created"], r["updated"], bool(r["pinned"]))
 
     @staticmethod
     def _turn(r) -> TurnRec:

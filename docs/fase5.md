@@ -21,6 +21,15 @@ En cada turno: se embebe lo que dices, se buscan los hechos y recuerdos más par
 - **Privacidad:** no se guardan contraseñas, números de 8+ dígitos (documentos, cuentas) ni de tarjeta, ni con "recuerda que" ni por extracción automática (`memory/text.py::looks_secret`).
 - **Cierre de sesión:** con >= 2 turnos, el LLM devuelve `{"resumen", "hechos"}` (máx. 5 hechos, en tercera persona). Tarda unos segundos al salir.
 
+## Hechos fijados (instrucciones permanentes)
+
+La búsqueda por parecido solo trae hechos del tema de la charla, así que "llámame Tony" o "responde siempre corto" nunca salían (se aplicaban solo si Dario volvía a mencionarlos). Solución: esos hechos se **fijan** (`pinned`) y van en el prompt de **todos** los turnos, con prioridad sobre el estilo por defecto.
+
+- "llámame X" / "quiero que me llames X" guarda el nombre (uno solo vigente: el nuevo reemplaza al anterior).
+- Se fija automáticamente todo hecho que parezca una instrucción de trato (llam*, trat*, siempre, nunca, responde, "JARVIS quiere..."): `memory/text.py::is_standing`. La extracción del LLM al salir también pide estas instrucciones.
+- `/memoria` marca con `*` los fijados; `/fijar N` fija uno a mano; `/olvidar N` lo quita. Máx. 5 fijados por turno.
+- Migración automática v1 -> v2 de la base: añade la columna y fija los hechos antiguos que ya eran instrucciones.
+
 ## Uso
 
 ```
@@ -42,7 +51,11 @@ python voice_chat.py
 
 `memory/`: `store.py` (SQLite + búsqueda), `embeddings.py` (interfaz Embedder + Ollama), `manager.py` (`Memory`: augment, record_turn, remember/forget, close_session), `commands.py` (órdenes en lenguaje natural), `extract.py` (resumen y hechos con el LLM), `text.py`. Integración: `chat.py`, `voice_chat.py`, `core/voice_loop.py` (`memory=`; turno de tipo `"memory"`). Pruebas: `tests/test_memory.py` (17; 54 en total) con embedder y LLM falsos.
 
-## Pendiente de verificar en la PC (con Ollama real)
+## Verificación en la PC (hecha 24-nov-2026)
+
+Medido con `scripts/bench_embeddings.py`: bge-m3 en CPU, 49 ms de mediana (máx. 76 ms), acierto top-1 9/10; los parecidos de aciertos (mín. 0.47) y errores (máx. 0.48) se solapan, por eso `min_fact_score` queda en 0.45 (permisivo) y `min_episode_score` en 0.50 (sin medir; ajustar con `--debug`). Prueba de dos sesiones por voz hecha por Dario.
+
+Pasos usados:
 
 1. `ollama pull bge-m3`
 2. `python scripts/bench_embeddings.py` -> latencia en CPU, acierto y **umbral sugerido**; ajustar `memory.min_fact_score` / `min_episode_score` en config.yaml. Los valores por defecto (0.45 / 0.55) son estimaciones, no medidas.

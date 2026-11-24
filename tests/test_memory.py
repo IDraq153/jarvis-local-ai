@@ -190,6 +190,50 @@ class TestCommands(Base):
         self.assertIn("contraseñas", self.mem.handle_command("recuerda que mi contraseña es hunter2"))
 
 
+class TestPinned(Base):
+    SYS = [{"role": "system", "content": "SYS"}]
+
+    def test_name_is_applied_every_turn_even_when_unrelated(self):
+        self.assertIn("Tony", self.mem.handle_command("llámame Tony"))
+        for q in ("hola", "cuéntame algo sobre subnetting ccna", "sí"):
+            out = self.mem.augment(self.SYS, q)[0]["content"]
+            self.assertIn("«Tony»", out, q)
+            self.assertIn("Instrucciones de Dario", out)
+
+    def test_new_name_replaces_old(self):
+        self.mem.handle_command("llámame Tony")
+        self.mem.handle_command("quiero que me llames Stark")
+        out = self.mem.augment(self.SYS, "hola")[0]["content"]
+        self.assertIn("Stark", out)
+        self.assertNotIn("Tony", out)
+        self.assertEqual(len([f for f in self.mem.facts() if f.source == "name"]), 1)
+
+    def test_standing_instructions_are_pinned_plain_facts_are_not(self):
+        self.mem.remember("responde siempre en frases cortas")
+        self.mem.remember("Dario tiene examen de redes el viernes")
+        pinned = [f.text for f in self.mem.store.pinned_facts()]
+        self.assertEqual(pinned, ["responde siempre en frases cortas"])
+        self.assertNotIn("examen", self.mem.augment(self.SYS, "hola")[0]["content"])
+
+    def test_migration_pins_old_instructions(self):
+        import sqlite3
+        db = sqlite3.connect(self.path)
+        db.execute("ALTER TABLE facts DROP COLUMN pinned")
+        db.execute("INSERT INTO facts(text, source, created, updated) VALUES ('Dario quiere que lo llamen Tony','auto',1,1)")
+        db.execute("INSERT INTO facts(text, source, created, updated) VALUES ('Dario estudia redes','auto',1,1)")
+        db.commit(); db.close()
+        self.mem.store.close()
+        store = MemoryStore(self.path)
+        self.assertEqual([f.text for f in store.pinned_facts()], ["Dario quiere que lo llamen Tony"])
+
+    def test_name_parse(self):
+        from memory.commands import parse_memory_command as parse
+        self.assertEqual(parse("Jarvis, llámame Tony."), ("name", "Tony"))
+        self.assertEqual(parse("llámame como Tony Stark"), ("name", "Tony Stark"))
+        self.assertEqual(parse("quiero que me llames jefe"), ("name", "jefe"))
+        self.assertIsNone(parse("llámame cuando termines de compilar el proyecto"))
+
+
 class TestExtraction(unittest.TestCase):
     def test_parse_tolerates_fences_and_noise(self):
         raw = 'Claro:\n```json\n{"resumen": " Hablaron  de X ", "hechos": ["Dario usa Ollama a diario", "corto", 5, "Dario usa Ollama a diario"]}\n```'

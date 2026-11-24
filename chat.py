@@ -11,7 +11,7 @@ from core.persona import SYSTEM_PROMPT
 from llm import LLMError, load_backend
 
 HELP = ("Comandos: /reset borra la conversación (no la memoria), /memoria lista lo que sé de ti, "
-        "/recordar TEXTO, /olvidar N|TEXTO, /salir termina. También: \"recuerda que...\", \"olvida lo de...\".")
+        "/recordar TEXTO, /olvidar N|TEXTO, /fijar N, /salir termina. También: \"recuerda que...\", \"olvida lo de...\".")
 
 
 def main():
@@ -90,7 +90,12 @@ def main():
         if memory:
             if user == "/memoria":
                 facts = memory.facts()
-                print("\n".join(f"  [{f.id}] {f.text}" for f in facts) if facts else "  (sin hechos guardados)")
+                print("\n".join(f"  [{f.id}]{'*' if f.pinned else ' '} {f.text}" for f in facts)
+                      + "\n  (* = fijado: se aplica en todos los turnos)" if facts else "  (sin hechos guardados)")
+                continue
+            if user.startswith("/fijar ") and user[7:].strip().isdigit():
+                ok = memory.store.set_pinned(int(user[7:]), True)
+                print("Fijado." if ok else "No existe ese número.")
                 continue
             if user.startswith("/olvidar ") and user[9:].strip().isdigit():
                 print("Olvidado." if memory.forget_id(int(user[9:])) else "No existe ese número.")

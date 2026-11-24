@@ -25,6 +25,18 @@ def content_words(text: str) -> list[str]:
     return [w for w in words(text) if len(w) > 2 and w not in STOPWORDS]
 
 
+_STANDING_WORDS = {"siempre", "nunca", "hablame", "responde", "responder", "contesta", "contestar"}
+
+
+def is_standing(text: str) -> bool:
+    """¿Es una instrucción permanente sobre cómo tratar/responder a Dario (nombre, tono, idioma...)?
+    Esas no se parecen al tema de la charla, así que se FIJAN: van en todos los turnos."""
+    w = words(text)
+    if any(x.startswith(("llam", "trat")) or x in _STANDING_WORDS for x in w):
+        return True
+    return "jarvis" in w and "quiere" in w
+
+
 def looks_secret(text: str) -> bool:
     """Contraseñas, números largos (documentos, cuentas) o de tarjeta: JARVIS no los guarda."""
     if _LONG_DIGITS.search(text) or _CARD_LIKE.search(text):
