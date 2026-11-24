@@ -31,3 +31,6 @@ tts:
   device: cuda
   trim_cache: true                   # libera caché de CUDA tras cada trozo (menos VRAM)
   speed: 1.1                         # elegido en voicelab.tune
+voice:
+  tail_ms: 500          # micro cerrado este tiempo extra tras la última palabra de JARVIS (anti-eco)
+  max_turns: 8          # intercambios que recuerda el LLM en el prompt (num_ctx es 4096)
