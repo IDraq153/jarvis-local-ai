@@ -20,3 +20,5 @@ voicelab/envs/
 voicelab/refs/
 voicelab/packs/
 stt/samples/
+
+data/

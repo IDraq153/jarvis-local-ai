@@ -1,7 +1,8 @@
 """Conversación por voz con JARVIS (Fase 4): hablas, él te escucha, piensa y te responde en voz alta.
 
 Uso: python voice_chat.py [--debug] [--sin-voz] [--stt-model base] [--mic N]
-Di "salir" (o Ctrl+C) para terminar, "reinicia" para borrar la conversación.
+Di "salir" (o Ctrl+C) para terminar, "reinicia" para borrar la conversación (la memoria se conserva).
+Memoria (Fase 5): "recuerda que...", "olvida lo de...", "qué sabes de mí"; --sin-memoria la desactiva.
 Mientras JARVIS habla el micrófono está cerrado (anti-eco); espera a que termine.
 """
 import argparse
@@ -27,6 +28,7 @@ def main():
     ap.add_argument("--threshold", type=float, help="umbral de voz (RMS); por defecto se calibra")
     ap.add_argument("--sin-voz", action="store_true", help="no sintetiza voz (solo escucha y escribe)")
     ap.add_argument("--debug", action="store_true", help="muestra la latencia de cada turno")
+    ap.add_argument("--sin-memoria", action="store_true", help="no usa ni guarda la memoria persistente")
     args = ap.parse_args()
 
     cfg = yaml.safe_load(Path(__file__).with_name("config.yaml").read_text(encoding="utf-8"))
@@ -70,6 +72,22 @@ def main():
             if used is not None and total:
                 print(f"  VRAM con LLM y voz: {used} / {total} MB (libres: {total - used} MB)")
 
+        memory = None
+        mcfg = cfg.get("memory") or {}
+        if mcfg.get("enabled", True) and not args.sin_memoria:
+            from memory import load_memory
+            try:
+                memory = load_memory(mcfg, Path(__file__).parent)
+                st = memory.start_session()
+                print("Cargando la memoria...", end=" ", flush=True)
+                t0 = time.time()
+                w = memory.warmup()
+                print(f"lista ({time.time() - t0:.1f} s)" if w is not None else "sin embeddings (busco por palabras)")
+                print(f"  Memoria: {st['facts']} hechos, {st['turns']} recuerdos, {st['sessions']} sesiones previas")
+            except Exception as e:  # la memoria nunca debe impedir hablar con JARVIS
+                print(f"\n[memoria desactivada] {e}")
+                memory = None
+
         if not threshold:
             print("Midiendo el ruido ambiente (1 s, no hables)...", end=" ", flush=True)
             threshold = calibrate_threshold(mic)
@@ -91,7 +109,7 @@ def main():
 
     loop = VoiceLoop(
         listen=listen, transcribe=stt.transcribe, llm=llm, speaker=speaker,
-        history=[{"role": "system", "content": SYSTEM_PROMPT}], on_heard=on_heard,
+        history=[{"role": "system", "content": SYSTEM_PROMPT}], on_heard=on_heard, memory=memory,
         tail_ms=vcfg.get("tail_ms", 500), max_turns=vcfg.get("max_turns", 8), on_text=on_text)
 
     print('JARVIS en línea. Habla cuando quieras ("salir" termina, "reinicia" borra la conversación).')
@@ -106,6 +124,8 @@ def main():
                 print(f"\r(eco de JARVIS, ignorado: {turn.heard})")
             elif turn.kind == "exit":
                 break
+            elif turn.kind == "memory":
+                print()
             elif turn.kind == "reset":
                 print(f"\r> {turn.heard}\nConversación reiniciada.")
             elif turn.kind == "error":
@@ -116,12 +136,19 @@ def main():
                     print(f"  [turno] oído {turn.audio_s:.1f} s | STT {turn.stt_s:.2f} s | "
                           f"1.er token {turn.llm_first_token_s:.2f} s | 1.er audio +{turn.first_audio_s:.2f} s | "
                           f"percibido {turn.perceived_s:.2f} s")
+                    if memory:
+                        print(f"  [memoria] búsqueda {memory.last_retrieval_s * 1000:.0f} ms, "
+                              f"bloque {len(memory.last_block)} car.")
     except KeyboardInterrupt:
         pass
     except STTError as e:
         print(f"\nError: {e}")
     if speaker:
         speaker.close()
+    if memory:
+        print("\nGuardando la memoria...", end=" ", flush=True)
+        res = memory.close_session(llm)
+        print(f"{res['nuevos']} hechos nuevos, {res['actualizados']} actualizados." if res else "listo.")
     print("\nHasta luego, Dario.")
 
 

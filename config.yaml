@@ -34,3 +34,21 @@ tts:
 voice:
   tail_ms: 500          # micro cerrado este tiempo extra tras la última palabra de JARVIS (anti-eco)
   max_turns: 8          # intercambios que recuerda el LLM en el prompt (num_ctx es 4096)
+memory:
+  enabled: true
+  db_path: data/jarvis_memory.db   # SQLite local; *.db ya está en .gitignore (repo público)
+  embedder:
+    backend: ollama
+    model: bge-m3          # multilingüe (ollama pull bge-m3); alternativas: embeddinggemma, nomic-embed-text
+    host: http://127.0.0.1:11434
+    device: cpu            # num_gpu 0: no gasta VRAM (con LLM + voz quedan ~535 MB libres)
+    keep_alive: 10m
+  top_facts: 5             # hechos que se inyectan como máximo por turno
+  top_episodes: 2          # recuerdos de conversaciones pasadas por turno
+  min_fact_score: 0.45     # bge-m3 medido: acierto mín 0.47, error máx 0.48 (se solapan); mejor pecar de permisivo
+  min_episode_score: 0.50  # sin medir (turnos largos); ajustar mirando [memoria] con --debug
+  dedupe_score: 0.90       # un hecho casi igual a otro lo actualiza en vez de duplicarlo
+  forget_score: 0.60       # parecido mínimo para borrar con "olvida ..."
+  max_block_chars: 1200    # ~300 tokens del contexto de 4096
+  summarize_on_exit: true  # al salir: resumen de la sesión + hechos nuevos (usa el LLM, unos segundos)
+  min_turns_to_summarize: 2

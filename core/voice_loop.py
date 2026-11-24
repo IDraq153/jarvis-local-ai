@@ -67,7 +67,7 @@ def trim_history(history: list[dict], max_turns: int) -> list[dict]:
 
 @dataclass
 class Turn:
-    kind: str                    # "reply" | "silence" | "noise" | "echo" | "exit" | "reset" | "error"
+    kind: str                    # "reply" | "memory" | "silence" | "noise" | "echo" | "exit" | "reset" | "error"
     heard: str = ""
     reply: str = ""
     stt_s: float = 0.0           # transcripción
@@ -90,6 +90,7 @@ class VoiceLoop:
     on_text: object = None       # callback(str) con cada trozo del LLM (para imprimir)
     on_heard: object = None      # callback(str) con lo que se te entendió, antes de responder
     sleep: object = time.sleep
+    memory: object | None = None  # memory.Memory (Fase 5) o None: sin memoria a largo plazo
     last_reply: str = ""
 
     def _say(self, text: str) -> None:
@@ -123,8 +124,17 @@ class VoiceLoop:
 
         if self.on_heard:
             self.on_heard(text)
+        if self.memory:  # "recuerda que...", "olvida lo de...", "qué sabes de mí": no pasan por el LLM
+            answer = self.memory.handle_command(text)
+            if answer is not None:
+                if self.on_text:
+                    self.on_text(answer)
+                self._say(answer)
+                return Turn("memory", reply=answer, **base)
         self.history.append({"role": "user", "content": text})
         messages = trim_history(self.history, self.max_turns)
+        if self.memory:  # añade al prompt de sistema lo recordado (el historial no se toca)
+            messages = self.memory.augment(messages, text)
         if self.speaker:
             self.speaker.stop()
         reply, ttft, t_llm = "", None, time.perf_counter()
@@ -146,6 +156,8 @@ class VoiceLoop:
             self.speaker.finish()
         self.history.append({"role": "assistant", "content": reply})
         self.last_reply = reply
+        if self.memory:  # se guarda mientras JARVIS aún habla: no suma latencia
+            self.memory.record_turn(text, reply)
         first_audio = (getattr(self.speaker, "first_audio_delay", None) or 0.0) if self.speaker else 0.0
         if self.speaker:
             self.speaker.wait()          # el micrófono sigue cerrado hasta que JARVIS calle
